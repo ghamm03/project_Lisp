@@ -1,4 +1,4 @@
 
-public class Sexpr {
+public interface Sexpr {
 
 }

@@ -1,18 +1,23 @@
-import java.util.ArrayList;
 
 
-public class Nil extends Atome{
+public class Nil implements Slist{
 
-	private final ArrayList<Sexpr> list;
+	public static Sexpr NIL = new Nil();
 
-	public Nil(){
-		this.list = new ArrayList<Sexpr>();
+
+	private Nil(){}
+
+	@Override
+	public Sexpr car() {
+		// TODO Auto-generated method stub
+		return this;
 	}
 
-	public ArrayList<Sexpr> getList() {
-		return this.list;
+	@Override
+	public Sexpr cdr() {
+		// TODO Auto-generated method stub
+		return this;
 	}
-
 
 
 }
