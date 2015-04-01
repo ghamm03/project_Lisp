@@ -1,13 +1,9 @@
 
-public class Atome {
+public abstract class Atome extends Sexpr{
 	
 	private String atome;
 	
-	public Atome(String mot){
-		this.setAtome(mot);
-	}
 
-	
 	
 	
 	//ACCESSEURS

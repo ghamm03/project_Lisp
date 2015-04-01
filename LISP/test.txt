@@ -1,1 +1,1 @@
-(car (quote(pomme orange)))
+()
