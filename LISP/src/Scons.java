@@ -4,6 +4,7 @@ public class Scons implements Slist {
 
 	private Sexpr prem;
 	private Sexpr sec;
+	public int test;
 
 
 	//ACCESSEURS
@@ -22,6 +23,7 @@ public class Scons implements Slist {
 	protected void setSec(Sexpr sec) {
 		this.sec = sec;
 	}
+
 
 
 	//CONSTRUCTORS
