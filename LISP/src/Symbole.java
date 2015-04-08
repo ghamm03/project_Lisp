@@ -1,4 +1,4 @@
 
-public class Symbole {
+public class Symbole extends Atome {
 
 }
