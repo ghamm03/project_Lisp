@@ -1,6 +1,6 @@
 
 
-public class Nil implements Slist{
+public class Nil extends Atome implements Slist{
 
 	public static Sexpr NIL = new Nil();
 
