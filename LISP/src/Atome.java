@@ -1,5 +1,5 @@
 
-public abstract class Atome implements Sexpr{
+public abstract class Atome implements Sexpr {
 
 	private String atome;
 

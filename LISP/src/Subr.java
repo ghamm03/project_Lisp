@@ -1,5 +1,5 @@
 
-public abstract class Subr {
+public abstract class Subr extends Primitive {
 
 	public Sexpr car(Sexpr a) {
 		return null;
