@@ -1,4 +1,4 @@
 
-public class Fexpr extends Fonctions {
+public class Fexpr implements Fonctions {
 
 }

@@ -1,4 +1,4 @@
 
-public class Expr extends Fonctions {
+public class Expr implements Fonctions {
 
 }

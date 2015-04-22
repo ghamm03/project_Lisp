@@ -1,4 +1,4 @@
 
-public abstract class Fonctions implements fonctions {
+public interface Fonctions {
 
 }
