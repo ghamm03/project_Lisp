@@ -4,7 +4,6 @@ public class Scons implements Slist {
 
 	private Sexpr prem;
 	private Sexpr sec;
-	public int test;
 
 
 	//ACCESSEURS
