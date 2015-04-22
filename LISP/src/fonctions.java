@@ -1,4 +1,4 @@
 
-public interface fonctions {
+public interface Interfacefonctions {
 
 }
