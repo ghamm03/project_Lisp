@@ -1,5 +1,5 @@
 options {
-static = true;
+static = false;
 }
 
 PARSER_BEGIN(Reader)
@@ -9,9 +9,14 @@ import java.io.*;
 
 public class Reader {
  public static void main(String args []){
-    		
  	   		try {
-				System.out.println(read());
+	    		Contexte.cont.ajouter("quote", Quote.quote);
+				Contexte.cont.ajouter("cdr", Cdr.cdr);
+				Contexte.cont.ajouter("car", Car.car);
+				Contexte.cont.ajouter("cons", Cons.cons);
+ 	   		  	SExpr exp = read();
+				System.out.println(exp);
+				System.out.println(exp.eval());
 			} catch (LispException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
