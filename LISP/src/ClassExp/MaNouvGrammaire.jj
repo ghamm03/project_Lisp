@@ -1,0 +1,82 @@
+options {
+JDK_VERSION = "1.6";
+static = true;
+}
+
+PARSER_BEGIN(Reader)
+package reader;
+public class Reader {
+  
+	protected static java.io.Reader in = new BufferedReader(new InputStreamReader(System.in));
+	public static SExpr read() throws LispException {};
+	public static SExpr read(String s) throws LispException{};
+	public static SExpr importe(String s);
+}
+
+PARSER_END(Reader)
+
+SKIP :
+{
+" " | "\t" | "\r"| "\n"
+// attention élimine la notion de fin de ligne
+| "\u0000" | "\u0001" | "\u0002" | "\u0003" | "\u0004" | "\u0005" | "\u0006" | "\u0007"
+| "\u0008" | "\u000B" | "\u000C" | "\u000E" | "\u000F" | "\u0010" | "\u0011" | "\u0012"
+| "\u0013" | "\u0014" | "\u0015" | "\u0016" | "\u0017" | "\u0018" | "\u0019" | "\u001A"
+| "\u001B" | "\u001C" | "\u001D" | "\u001E" | "\u001F" | "\u007F"
+}
+
+MORE :
+{
+"//" : IN_SL_COMMENT
+| "/*" : IN_ML_COMMENT
+}
+<IN_SL_COMMENT> SPECIAL_TOKEN :{<SL_COMMENT: "\n" | "\r" | "\r\n"> : DEFAULT}
+<IN_ML_COMMENT> SPECIAL_TOKEN :{<ML_COMMENT: "*/" > : DEFAULT}
+<IN_SL_COMMENT,IN_ML_COMMENT> SKIP :{< ~[] >}
+
+TOKEN :{
+	<POINT: ".">
+}
+
+TOKEN :{
+	<SYMBOL: (["a"-"z"]|["A"-"Z"]|"."|"-")+>
+}
+
+TOKEN :{
+	<PARO: "("> |
+	<PARF: ")"> |
+	< QUOTE : "'" >
+}
+
+//SExpr SEXPRESSIONS() :
+//{SExpr s1;}
+//{
+//(s1=SEXPR(){})* <EOF>
+	
+//<EOF>
+
+//}
+
+	  
+	SExpr SEXPR () : {SExpr s2;}
+	{ s2=ATOME() {return s2;}
+	  |<PARO> s2=LISTE() <PARF> {return s2;}
+	  |< QUOTE > s2=SEXPR() {return new Scons (new Symbole("quote"), s2);}	   
+    }
+
+	SExpr LISTE() : {SExpr s2,s3;}	{		  s2=SEXPR() s3=FINLISTE() {return new Scons(s2,s3);}
+		| {return NIL;}     }	  
+    
+
+	Atome ATOME() : {Token sym;} 
+	{ 	sym=< SYMBOL > {return new Symbole(sym.image);}		  
+	}
+
+	SExpr FINLISTE() : {SExpr s4,s5;}
+	{
+    	  <POINT> s4=SEXPR() {return s4;}
+    	| s4=SEXPR() s5=FINLISTE() {return new Scons(s4,s5);}
+    	| {return NIL;}
+	}
+	
+
