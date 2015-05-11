@@ -37,14 +37,14 @@ public class SCons implements Liste {
 
 
 	@Override
-	public SExpr eval() throws ListException {
+	public SExpr eval() throws LispException {
 		Evaluator evaluator;
 		SExpr arg = this.queue;
 		SExpr rescar = this.tete.eval();
 		SExpr param=null; // initialisation pour enlever erreur
 		SExpr forme=NIL.nil; // initialisation pour enlever erreur
 		if (rescar instanceof Symbole || rescar instanceof NIL)
-			throw new ListException("12");
+			throw new LispException("12");
 		else if (rescar instanceof Primitive)
 			evaluator =((Primitive) rescar);
 		else {
@@ -57,11 +57,11 @@ public class SCons implements Liste {
 				else if (ident.toString()=="lambda")
 					evaluator = Expr.expr;
 				else
-					throw new ListException("1"); // evaluer ident??
+					throw new LispException("1"); // evaluer ident??
 
 			}
 			else {
-				throw new ListException("2");
+				throw new LispException("2");
 			}
 		}
 
@@ -88,30 +88,30 @@ public class SCons implements Liste {
 
 	}
 
-	public void associerContexte(SExpr param,SExpr arg) throws ListException{
+	public void associerContexte(SExpr param,SExpr arg) throws LispException{
 		if (param instanceof SCons && arg instanceof SCons){
 			Contexte.cont.ajouter(((SCons)param).tete.toString(),((SCons)param).tete); // vérifier qu'on a bien un Symbole à droite
 			this.associerContexte(((SCons)param).queue,((SCons)arg).queue);
 		}
 		else if (!(param instanceof NIL) || !(arg instanceof NIL))
-			throw new ListException("3");
+			throw new LispException("3");
 
 	}
 
-	public SCons evalListe () throws ListException{
+	public SCons evalListe () throws LispException{
 		if (this.queue==NIL.nil)
 			return new SCons(this.tete.eval(),NIL.nil);
 		else if (this.queue instanceof Symbole)
-			throw new ListException("4");
+			throw new LispException("4");
 		else
 			return new SCons(this.tete.eval(),((SCons)this.queue).evalListe());
 	}
 
-	public SCons evalListe2 () throws ListException{
+	public SCons evalListe2 () throws LispException{
 		if (this.queue==NIL.nil)
 			return new SCons(this.tete,NIL.nil);
 		else if (this.queue instanceof Symbole)
-			throw new ListException("5");
+			throw new LispException("5");
 		else
 			return new SCons(this.tete,((SCons)this.queue).evalListe2());
 	}

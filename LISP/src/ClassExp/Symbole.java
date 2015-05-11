@@ -8,10 +8,10 @@ public class Symbole extends Atome {
 		return ch;
 	}
 	
-	public SExpr eval () throws ListException {
+	public SExpr eval () throws LispException {
 		SExpr res= Contexte.tab.get(ch);
 		if (res==null){
-			throw new ListException("Erreur symbole");
+			throw new LispException("Erreur symbole");
 		}
 		return res;
 	}

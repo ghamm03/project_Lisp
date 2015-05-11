@@ -6,14 +6,14 @@ public class Cons extends Subr {
 	private Cons(){};
 	
 	@Override
-	public SExpr apply(SCons e) throws ListException{
+	public SExpr apply(SCons e) throws LispException{
 		SExpr a = e.Car();
 		SExpr b = e.Cdr();
 		if (b instanceof SCons && ((SCons) b).Cdr() instanceof NIL) {
 			return new SCons(a,((SCons)b).Car());
 		}
 		
-		throw new ListException("Erreur Cons");
+		throw new LispException("Erreur Cons");
 	}
 	
 	

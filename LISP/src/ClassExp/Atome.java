@@ -2,7 +2,7 @@ package ClassExp;
 
 public abstract class Atome implements SExpr {
 	
-	public SExpr eval() throws ListException {
+	public SExpr eval() throws LispException {
 		return this;		
 	}
 	public boolean Atom(){

@@ -35,7 +35,7 @@ public class Main {
 		System.out.println(exp2.toString());
 
 		try { System.out.println(exp2.eval().toString());}
-		catch (ListException e){
+		catch (LispException e){
 			System.out.println("expt");
 		}
 	}

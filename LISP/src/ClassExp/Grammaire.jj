@@ -1,0 +1,162 @@
+options {
+static = true;
+}
+
+PARSER_BEGIN(Reader)
+package reader;
+import ClassExp.*;
+import java.io.*;
+
+public class Reader {
+ public static void main(String args []){
+    		
+ 	   		try {
+				System.out.println(read());
+			} catch (LispException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	  }
+  
+	protected static java.io.Reader in = new BufferedReader(new InputStreamReader(System.in));
+
+    /** lecture d'une SEXPR depuis la console
+	* @return Sexpr : la SEXPR construite
+	* @throws LispException (= une erreur dans la commande)
+	*/
+	public static SExpr read() throws LispException {
+	  	Reader parser = new Reader(in);
+	  	SExpr tmp=null;
+	  	try
+ 	    {
+ 	      tmp = parser.SEXPR_init();
+ 	    }
+		catch (ParseException e)
+		{
+		  System.out.println(e.getMessage());
+		}
+	  	return tmp;
+	  	};
+
+	/** lecture d'une SEXPR à partir d'une chaîne
+	* @param s : la chaîne
+	* @return Sexpr : la SEXPR construite.
+	* @throws LispException (= une erreur dans la commande)
+	*/
+		
+	public static SExpr read(String s) throws LispException{
+	  InputStream in = new ByteArrayInputStream(s.getBytes());
+			Reader parser = new Reader (in);
+		  	SExpr tmp=null;
+		  	try
+	 	    {
+	 	      tmp = parser.SEXPR_init();
+	 	    }
+			catch (ParseException e)
+			{
+			  System.out.println(e.getMessage());
+			}
+		  	return tmp;
+	  		
+	};
+
+	/** Lecture à partir d'un fichier
+	* @param s : le nom du fichier d'entrée
+	* @return Sexpr : le résultat de l'évaluation
+	* @throws LispException (= une erreur dans la commande)
+	*/
+	
+	public static SExpr importe(String s) throws LispException
+	{
+	  FileReader reader;
+        int car=0;
+        int i=0;
+        char donnee []=null;
+        String chaine=null;
+
+		try {
+		  reader = new FileReader(s);
+            while (car != -1) { 
+                car = reader.read(); 
+                if (car != -1) { 
+                    donnee[i] =  (char) car;
+                    i++;
+                }
+            }
+            chaine = new String (donnee);
+            reader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println( "Fichier introuvable "
+                                    +s);
+        } catch (IOException e) {
+            System.out.println("Erreur dans la lecture");
+        }
+        return read(chaine);
+	};
+	  
+}
+
+PARSER_END(Reader)
+
+SKIP :
+{
+" " | "\t" | "\r"| "\n"
+// attention Ã©limine la notion de fin de ligne
+| "\u0000" | "\u0001" | "\u0002" | "\u0003" | "\u0004" | "\u0005" | "\u0006" | "\u0007"
+| "\u0008" | "\u000B" | "\u000C" | "\u000E" | "\u000F" | "\u0010" | "\u0011" | "\u0012"
+| "\u0013" | "\u0014" | "\u0015" | "\u0016" | "\u0017" | "\u0018" | "\u0019" | "\u001A"
+| "\u001B" | "\u001C" | "\u001D" | "\u001E" | "\u001F" | "\u007F"
+}
+
+MORE :
+{
+"//" : IN_SL_COMMENT
+| "/*" : IN_ML_COMMENT
+}
+<IN_SL_COMMENT> SPECIAL_TOKEN :{<SL_COMMENT: "\n" | "\r" | "\r\n"> : DEFAULT}
+<IN_ML_COMMENT> SPECIAL_TOKEN :{<ML_COMMENT: "*/" > : DEFAULT}
+<IN_SL_COMMENT,IN_ML_COMMENT> SKIP :{< ~[] >}
+
+TOKEN :{
+	<POINT: ".">
+}
+
+TOKEN :{
+	<SYMBOL: (["a"-"z"]|["A"-"Z"]|"."|"-")+>
+}
+
+TOKEN :{
+	<PARO: "("> |
+	<PARF: ")"> |
+	< QUOTE : "'" >
+}
+
+SExpr SEXPR_init() :
+{SExpr s1;}
+{
+(s1=SEXPR(){return s1;})* 
+}
+
+	  
+	SExpr SEXPR () : {SExpr s2;}
+	{ s2=ATOME() {return s2;}
+	  |<PARO> s2=LISTE() <PARF> {return s2;}
+	  |< QUOTE > s2=SEXPR() {return new SCons (new Symbole("quote"), s2);}	   
+    }
+
+	SExpr LISTE() : {SExpr s2,s3;}	{		  s2=SEXPR() s3=FINLISTE() {return new SCons(s2,s3);}
+		| {return NIL.nil;}     }	  
+    
+
+	Atome ATOME() : {Token sym;} 
+	{ 	sym=< SYMBOL > {return new Symbole(sym.image);}		  
+	}
+
+	SExpr FINLISTE() : {SExpr s4,s5;}
+	{
+    	  <POINT> s4=SEXPR() {return s4;}
+    	| s4=SEXPR() s5=FINLISTE() {return new SCons(s4,s5);}
+    	| {return NIL.nil;}
+	}
+	
+
